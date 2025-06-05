@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+/.vs/ExpEval/CopilotIndices/17.12.31.40377
+/.vs/ExpEval/FileContentIndex
+/.vs/ExpEval/v17
+/ExpEval/x64/Debug/ExpEval.tlog
+/ExpEval/x64/Debug
+/ExpEval/x64/Release/ExpEval.tlog
+/ExpEval/x64/Release
+/ExpEval/ExpEval.vcxproj
+/ExpEval/ExpEval.vcxproj.filters
+/ExpEval/ExpEval.vcxproj.user
+/x64
