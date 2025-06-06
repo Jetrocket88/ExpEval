@@ -4,6 +4,9 @@
 #include <vector>  
 #include <sstream>  
 #include <string>  
+#include <numbers>
+
+#define _USE_MATH_DEFINES
 
 int getPrecedence(const std::string& s) {
     if (s == "^") return 3;
@@ -45,8 +48,11 @@ std::vector<std::string> tokenise(const std::string& s) {
            if (s[i] == 's') func = "sin";
            else if (s[i] == 'c') func = "cos";
            else if (s[i] == 't') func = "tan";
-           i += 3;
+           i += 2;
            tokens.push_back(func);
+       }
+       else if (s[i] == ')' || s[i] == '(') {
+           tokens.push_back(std::string(1, s[i]));
        }
    }  
    return tokens;
@@ -82,12 +88,16 @@ std::vector<std::string> convertToPostfix(const std::vector<std::string>& tokens
            if (!opStack.empty() && opStack.top() == "(") {
                opStack.pop();
            }
+           if (!opStack.empty() && isFunction(opStack.top()[0])) {
+               outputVec.push_back(opStack.top());
+               opStack.pop();
+           }
        }
        else if (token == "(") {
            opStack.push(token);
        }
-       else if (isOperator(token)) {
-
+       else if (isFunction(token[0])) {
+           opStack.push(token);
        }
    }
    while (!opStack.empty()) {
@@ -114,6 +124,14 @@ float evalPostfix(const std::vector<std::string>& outputVec) {
            else if (token == "*") valStack.push(val1 * val2);
            else if (token == "/") valStack.push(val2 / val1);
            else if (token == "^") valStack.push(std::pow(val2, val1));
+       }
+       else if (isFunction(token[0])) {
+           float val1 = valStack.top();
+           valStack.pop();
+           float rads = val1 * (3.14159 / 180);
+           if (token[0] == 's') valStack.push(std::sin(rads));
+           else if (token[0] == 'c') valStack.push(std::cos(rads));
+           else if (token[0] == 't') valStack.push(std::tan(rads));
        }
    }
    return valStack.top();  
