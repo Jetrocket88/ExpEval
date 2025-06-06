@@ -145,7 +145,4 @@ int main()
    std::vector<std::string> tokens = tokenise(exp);
    std::vector<std::string> outputVec = convertToPostfix(tokens);
    std::cout << evalPostfix(outputVec) << std::endl;
-
-   std::cout << "Press enter to exit";
-   std::cin.get();
 }
