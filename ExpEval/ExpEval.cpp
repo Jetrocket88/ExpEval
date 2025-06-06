@@ -17,8 +17,11 @@ bool isLeftAssociative(const std::string& s) {
 }
 
 bool isOperator(const std::string& s) {
-    if (s == "+" || s == "-" || s == "*" || s == "/" || s == "^") return true;
-    return false;
+    return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^");
+}
+
+bool isFunction(const char& c) {
+    return (c == 's' || c == 'c' || c == 't');
 }
 
 std::vector<std::string> tokenise(const std::string& s) {
@@ -34,9 +37,17 @@ std::vector<std::string> tokenise(const std::string& s) {
            tokens.push_back(num);
            i--;
        }  
-       else if (!std::isspace(s[i])) {  
+       else if (isOperator(std::string(1, s[i]))) { //is operator
            tokens.push_back(std::string(1, s[i])); 
        }  
+       else if (isFunction(s[i])) { // is a function
+           std::string func;
+           if (s[i] == 's') func = "sin";
+           else if (s[i] == 'c') func = "cos";
+           else if (s[i] == 't') func = "tan";
+           i += 3;
+           tokens.push_back(func);
+       }
    }  
    return tokens;
 }
@@ -75,6 +86,9 @@ std::vector<std::string> convertToPostfix(const std::vector<std::string>& tokens
        else if (token == "(") {
            opStack.push(token);
        }
+       else if (isOperator(token)) {
+
+       }
    }
    while (!opStack.empty()) {
        outputVec.push_back(opStack.top());
@@ -88,7 +102,7 @@ float evalPostfix(const std::vector<std::string>& outputVec) {
    std::stack<float> valStack;
    for (const std::string token : outputVec) {
        if (std::isdigit(token[0])) {
-           valStack.push(std::stoi(token));
+           valStack.push(std::stof(token));
        }
        else if (isOperator(token)) {
            float val1 = valStack.top();
