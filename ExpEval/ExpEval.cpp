@@ -21,7 +21,7 @@ bool isOperator(const std::string& s) {
     return false;
 }
 
-float evalExpression(std::string s) {  
+std::vector<std::string> tokenise(const std::string& s) {
    //input serialisation into tokens
    std::vector<std::string> tokens;  
    for (size_t i = 0; i < s.length(); i++) {  
@@ -38,7 +38,10 @@ float evalExpression(std::string s) {
            tokens.push_back(std::string(1, s[i])); 
        }  
    }  
+   return tokens;
+}
 
+std::vector<std::string> convertToPostfix(const std::vector<std::string>& tokens) {
    //shunting yard algo
    std::vector<std::string> outputVec;
    std::stack<std::string> opStack;
@@ -77,7 +80,10 @@ float evalExpression(std::string s) {
        outputVec.push_back(opStack.top());
        opStack.pop();
    }
+   return outputVec;
+}
 
+float evalPostfix(const std::vector<std::string>& outputVec) {  
    //evaluating the posfix expression
    std::stack<float> valStack;
    for (const std::string token : outputVec) {
@@ -96,17 +102,18 @@ float evalExpression(std::string s) {
            else if (token == "^") valStack.push(std::pow(val2, val1));
        }
    }
-
    return valStack.top();  
 }  
 
 int main()  
 {  
    std::string exp;
-   std::cin >> exp;
-   float result = evalExpression(exp);  
-   std::cout << result << std::endl;
-   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+   std::getline(std::cin, exp);
+
+   std::vector<std::string> tokens = tokenise(exp);
+   std::vector<std::string> outputVec = convertToPostfix(tokens);
+   std::cout << evalPostfix(outputVec) << std::endl;
+
    std::cout << "Press enter to exit";
    std::cin.get();
 }
